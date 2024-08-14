@@ -1,107 +1,76 @@
-using System.IO;
+using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class HexGrid : MonoBehaviour
 {
-    public int width = 10;
-    public int height = 10;
+    public int radius = 3; // 大六边形的半径（层数），如3层就会包含7个六边形
     public float hexSize = 1f;
-    public GameObject[] terrainPrefabs; // 存储多个地形预制体
-    public HexCell[,] cells;
+    public HexCell hexCellPrefab; // 用于生成小六边形网格的HexCell预制体
+    public List<HexCell> cells = new List<HexCell>();
 
     void Start()
     {
-        CreateGrid();
+        CreateHexagonGrid();
     }
 
-    void CreateGrid()
+    void OnValidate()
     {
-        cells = new HexCell[width, height];
-        for (int x = 0; x < width; x++)
+        CreateHexagonGrid(); // 每次调整参数时，自动生成网格
+    }
+
+    void CreateHexagonGrid()
+    {
+        ClearGrid(); // 清除现有的网格
+
+        for (int q = -radius; q <= radius; q++)
         {
-            for (int y = 0; y < height; y++)
+            int r1 = Mathf.Max(-radius, -q - radius);
+            int r2 = Mathf.Min(radius, -q + radius);
+            for (int r = r1; r <= r2; r++)
             {
-                Vector3 position = CalculateHexPosition(x, y);
-                GameObject hexGO = Instantiate(terrainPrefabs[0], position, Quaternion.identity, transform); // 默认放置第一个预制体
-                cells[x, y] = hexGO.GetComponent<HexCell>();
-                cells[x, y].coordinates = new Vector2Int(x, y);
+                CreateHexCell(q, r);
             }
         }
     }
 
-    public Vector3 CalculateHexPosition(int x, int y)
+    void ClearGrid()
     {
-        float width = Mathf.Sqrt(3) * hexSize;
-        float height = 2 * hexSize;
-        float horizontalSpacing = width * 0.75f;
-        float verticalSpacing = height * 0.5f;
-
-        float offsetX = x * horizontalSpacing;
-        float offsetY = y * height + (x % 2 == 0 ? 0 : height / 2);
-
-        return new Vector3(offsetX, 0, offsetY);
-    }
-
-    public HexCell GetCellAt(Vector3 position)
-    {
-        int x = Mathf.RoundToInt(position.x / (Mathf.Sqrt(3) * hexSize * 0.75f));
-        int y = Mathf.RoundToInt(position.z / (hexSize * 2));
-
-        if (x >= 0 && y >= 0 && x < width && y < height)
+        // 区分运行时和编辑模式下的清除策略
+        if (Application.isPlaying)
         {
-            return cells[x, y];
-        }
-        return null;
-    }
-
-    public void SaveMap(string fileName)
-    {
-        using (StreamWriter writer = new StreamWriter(fileName))
-        {
-            for (int x = 0; x < width; x++)
+            foreach (Transform child in transform)
             {
-                for (int y = 0; y < height; y++)
-                {
-                    HexCell cell = cells[x, y];
-                    if (cell != null)
-                    {
-                        foreach (var entry in cell.GetAllObjects())
-                        {
-                            string type = entry.Key;
-                            foreach (var obj in entry.Value)
-                            {
-                                string objName = obj.name.Replace("(Clone)", "").Trim();
-                                writer.WriteLine($"{x},{y},{type},{objName}");
-                            }
-                        }
-                    }
-                }
+                Destroy(child.gameObject);
             }
         }
-    }
-
-    public void LoadMap(string fileName)
-    {
-        using (StreamReader reader = new StreamReader(fileName))
+        else
         {
-            string line;
-            while ((line = reader.ReadLine()) != null)
+            for (int i = transform.childCount - 1; i >= 0; i--)
             {
-                string[] parts = line.Split(',');
-                int x = int.Parse(parts[0]);
-                int y = int.Parse(parts[1]);
-                string type = parts[2];
-                string objectName = parts[3];
-
-                Vector3 position = CalculateHexPosition(x, y);
-                GameObject prefab = Resources.Load<GameObject>($"Prefabs/{objectName}");
-                if (prefab != null)
-                {
-                    GameObject hexGO = Instantiate(prefab, position, Quaternion.identity, transform);
-                    HexCell cell = cells[x, y] = hexGO.GetComponent<HexCell>();
-                    cell.AddObject(type, hexGO);
-                }
+                DestroyImmediate(transform.GetChild(i).gameObject);
             }
         }
+
+        cells.Clear(); // 清空列表
+    }
+
+    void CreateHexCell(int q, int r)
+    {
+        Vector3 position = CalculateHexPosition(q, r);
+
+        // 创建一个旋转：X 轴 90 度，Z 轴 30 度
+        Quaternion rotation = Quaternion.Euler(90f, 0f, 30f);
+
+        HexCell cell = Instantiate(hexCellPrefab, position, rotation, transform);
+        cell.coordinates = new Vector2Int(q, r);
+        cells.Add(cell);
+    }
+
+    public Vector3 CalculateHexPosition(int q, int r)
+    {
+        float x = hexSize * (Mathf.Sqrt(3) * q + Mathf.Sqrt(3) / 2 * r);
+        float z = hexSize * (3f / 2f * r);
+        return new Vector3(x, 0, z);
     }
 }

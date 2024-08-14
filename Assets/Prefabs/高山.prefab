@@ -22,19 +22,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 12ae98d75db179346ad087a9fd792df2, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 12ae98d75db179346ad087a9fd792df2, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 12ae98d75db179346ad087a9fd792df2, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000057601163
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 12ae98d75db179346ad087a9fd792df2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.000000057601163
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 12ae98d75db179346ad087a9fd792df2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -59,6 +59,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 12ae98d75db179346ad087a9fd792df2, type: 3}
       insertIndex: -1
       addedObject: {fileID: -7086158208443231809}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 12ae98d75db179346ad087a9fd792df2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2103125397674544344}
   m_SourcePrefab: {fileID: 100100000, guid: 12ae98d75db179346ad087a9fd792df2, type: 3}
 --- !u!1 &7836808453470055952 stripped
 GameObject:
@@ -81,3 +84,16 @@ MonoBehaviour:
   isPassable: 0
   passCost: 1000
   neighbors: []
+--- !u!114 &-2103125397674544344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7836808453470055952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da61bcfff12e07b4b9655125e2072192, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coordinates: {x: 0, y: 0}
