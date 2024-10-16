@@ -8,11 +8,18 @@ public class CustomTerrain : MonoBehaviour
     public bool isPassable = true; // 默认可通行
     public int passCost = 1; // 默认通行消耗
 
+    private Renderer renderer;
+    private Color originalColor;
+    public Color highlightColor = Color.yellow;
+
+
     public List<CustomTerrain> neighbors = new List<CustomTerrain>(); // 邻近地块
 
     void Start()
     {
         Initialize();
+        renderer = GetComponent<Renderer>();
+        originalColor = renderer.material.color;  // 保存原始颜色
     }
 
     public void Initialize()
@@ -63,6 +70,28 @@ public class CustomTerrain : MonoBehaviour
         }
     }
 
+    // 假设地块被点击时执行
+    void OnMouseDown()
+    {
+        // 检查 GameManager 中是否已经有选中的小队
+        if (GameManager.Instance.selectedTeam != null && GameManager.Instance.selectedTeam.isSelected)
+        {
+            //GameManager.Instance.selectedTeam.ShowPathTo(this); // 处理小队的路径显示
+        }
+    }
+
+    // 高亮该地块
+    public void Highlight()
+    {
+        renderer.material.color = highlightColor;
+    }
+
+    // 取消高亮
+    public void RemoveHighlight()
+    {
+        renderer.material.color = originalColor;
+    }
+
     public void FindNeighbors(CustomTerrain[,] grid, int x, int y)
     {
         int[] dxEven = { 1, 1, 0, -1, -1, 0 };
@@ -72,6 +101,8 @@ public class CustomTerrain : MonoBehaviour
 
         int[] dx = (y % 2 == 0) ? dxEven : dxOdd;
         int[] dy = (y % 2 == 0) ? dyEven : dyOdd;
+
+        neighbors.Clear(); // 清空之前的邻居列表，防止重复添加
 
         for (int i = 0; i < 6; i++)
         {
@@ -84,6 +115,7 @@ public class CustomTerrain : MonoBehaviour
                 if (neighbor != null)
                 {
                     neighbors.Add(neighbor);
+                    Debug.Log($"找到邻居 {nx}, {ny} 对于地块 {x}, {y}");
                 }
             }
         }
@@ -107,4 +139,5 @@ public class CustomTerrain : MonoBehaviour
             }
         }
     }
+
 }

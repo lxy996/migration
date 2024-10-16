@@ -4,25 +4,41 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class HexGrid : MonoBehaviour
 {
-    public int radius = 3; // 大六边形的半径（层数），如3层就会包含7个六边形
-    public float hexSize = 1f;
-    public HexCell hexCellPrefab; // 用于生成小六边形网格的HexCell预制体
-    public List<HexCell> cells = new List<HexCell>();
+    public int radius = 3;  // 六边形网格的半径
+    public GameObject terrainPrefab;  // 地形预制体，代表六边形的外观
+    public List<HexCell> cells = new List<HexCell>();  // 存储HexCell
 
-    void Start()
+    private float hexWidth;   // 六边形的宽度
+    private float hexHeight;  // 六边形的高度
+
+    // 通过地形预制体计算六边形的尺寸
+    void CalculateHexSize()
     {
-        CreateHexagonGrid();
+        if (terrainPrefab != null)
+        {
+            Renderer terrainRenderer = terrainPrefab.GetComponent<Renderer>();
+            if (terrainRenderer != null)
+            {
+                hexWidth = terrainRenderer.bounds.size.x;  // 获取地形预制体的宽度
+                hexHeight = terrainRenderer.bounds.size.z; // 获取地形预制体的高度
+            }
+            else
+            {
+                Debug.LogError("地形预制体没有 Renderer 组件");
+            }
+        }
+        else
+        {
+            Debug.LogError("未指定地形预制体");
+        }
     }
 
-    void OnValidate()
+    public void CreateHexagonGrid()
     {
-        CreateHexagonGrid(); // 每次调整参数时，自动生成网格
-    }
+        ClearGrid();  // 清除现有网格
+        CalculateHexSize();  // 计算六边形尺寸
 
-    void CreateHexagonGrid()
-    {
-        ClearGrid(); // 清除现有的网格
-
+        // 生成六边形网格
         for (int q = -radius; q <= radius; q++)
         {
             int r1 = Mathf.Max(-radius, -q - radius);
@@ -34,43 +50,53 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    void ClearGrid()
+    public void ClearGrid()
     {
-        // 区分运行时和编辑模式下的清除策略
-        if (Application.isPlaying)
+        // 立即销毁现有的HexCell对象
+        for (int i = transform.childCount - 1; i >= 0; i--)
         {
-            foreach (Transform child in transform)
-            {
-                Destroy(child.gameObject);
-            }
-        }
-        else
-        {
-            for (int i = transform.childCount - 1; i >= 0; i--)
-            {
-                DestroyImmediate(transform.GetChild(i).gameObject);
-            }
+            DestroyImmediate(transform.GetChild(i).gameObject);
         }
 
-        cells.Clear(); // 清空列表
+        cells.Clear();  // 清空HexCell列表
     }
 
     void CreateHexCell(int q, int r)
     {
+        // 计算每个六边形的位置
         Vector3 position = CalculateHexPosition(q, r);
 
-        // 创建一个旋转：X 轴 90 度，Z 轴 30 度
-        Quaternion rotation = Quaternion.Euler(90f, 0f, 30f);
-
-        HexCell cell = Instantiate(hexCellPrefab, position, rotation, transform);
+        // 实例化 HexCell 逻辑对象
+        GameObject hexCellObject = new GameObject("HexCell");
+        HexCell cell = hexCellObject.AddComponent<HexCell>();  // 新建 HexCell 对象
+        cell.transform.position = position;
+        cell.transform.parent = transform;
         cell.coordinates = new Vector2Int(q, r);
         cells.Add(cell);
+
+        // 设置地形预制体（初始地形）
+        cell.SetTerrain(terrainPrefab);  // 这里你可以传入不同的地形预制体
     }
 
+    // 为所有存在的 HexCell 重新设置地形
+    public void SetAllHexCellTerrain()
+    {
+        // 获取所有仍然存在的 HexCell
+        HexCell[] hexCells = transform.GetComponentsInChildren<HexCell>();
+
+        foreach (HexCell cell in hexCells)
+        {
+            if (cell != null && cell.terrainPrefab != null)  // 确保 HexCell 存在且有地形预制体
+            {
+                cell.SetTerrain(cell.terrainPrefab);  // 让每个 HexCell 使用自己的 terrainPrefab 设置地形
+            }
+        }
+    }
     public Vector3 CalculateHexPosition(int q, int r)
     {
-        float x = hexSize * (Mathf.Sqrt(3) * q + Mathf.Sqrt(3) / 2 * r);
-        float z = hexSize * (3f / 2f * r);
+        float x = hexWidth * (3f / 4f * q); // 水平方向：六边形高度的 3/4 倍
+        float z = hexWidth * Mathf.Sqrt(3) / 2 * (r + q / 2f);  // 垂直方向：调整为高度的 sqrt(3)/2 倍确保错位
+
         return new Vector3(x, 0, z);
     }
 }

@@ -8,7 +8,7 @@ public class Team
     public int speed;
     public int stamina;
     public int defense;
-    public int tempSpeed; // 添加 tempSpeed 属性
+    public int tempSpeed; // 临时速度
 
     public Team(string animalType, int numberOfMembers)
     {
@@ -22,7 +22,7 @@ public class Team
                 stamina = 3;
                 defense = 4;
                 break;
-            case "Gnu": // Assuming "Gnu" refers to Wildebeest
+            case "Gnu":
                 foodType = FoodType.BaseGrass;
                 speed = 3;
                 stamina = 4;
@@ -35,7 +35,7 @@ public class Team
                 defense = 3;
                 break;
             default:
-                foodType = FoodType.LongGrass; // Default case
+                foodType = FoodType.LongGrass;
                 speed = 3;
                 stamina = 3;
                 defense = 3;
@@ -48,6 +48,7 @@ public class Team
         }
     }
 
+    // 收集地块资源
     public void CollectResources()
     {
         int totalFood = 0;
@@ -72,7 +73,6 @@ public class Team
 
         int totalWater = currentTile.resources.water;
         int distance = CalculateDistanceFromMainGroup();
-
         float resourceMultiplier = distance == 1 ? 0.5f : 1.0f;
         totalFood = Mathf.RoundToInt(totalFood * resourceMultiplier);
         totalWater = Mathf.RoundToInt(totalWater * resourceMultiplier);
@@ -81,6 +81,7 @@ public class Team
         DistributeResources(totalWater, ResourceType.Water);
     }
 
+    // 分配资源
     private void DistributeResources(int totalAmount, ResourceType type)
     {
         foreach (AnimalMember member in members)
@@ -104,6 +105,7 @@ public class Team
         }
     }
 
+    // 更新小队成员状态
     public void UpdateMemberStates(int hungerChange, int thirstChange)
     {
         foreach (AnimalMember member in members)
@@ -113,6 +115,7 @@ public class Team
         }
     }
 
+    // 触发事件
     public void ResolveEvents()
     {
         int distance = CalculateDistanceFromMainGroup();

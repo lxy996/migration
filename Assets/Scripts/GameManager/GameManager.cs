@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance { get; private set; }
+
     public enum GameState
     {
         StartScreen,
@@ -14,7 +16,22 @@ public class GameManager : MonoBehaviour
     }
 
     public GameState currentState;
-    public Team team; // 假设这是当前游戏中的小队类
+    public Team team;
+    public List<TeamManager> teams = new List<TeamManager>();  // 所有小队
+    public TeamManager selectedTeam;  // 当前选中的小队
+    public CustomTerrain selectedTile;  // 当前选中的地块
+
+    void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void Start()
     {
@@ -52,7 +69,7 @@ public class GameManager : MonoBehaviour
     void LoadInGameScene()
     {
         SceneManager.LoadScene("GameScene");
-        LoadTeamState();
+        StartNewTurn();  // 开始游戏后重置小队状态
     }
 
     void ShowLevelEndScreen()
@@ -71,6 +88,65 @@ public class GameManager : MonoBehaviour
         ResetGameState();
         ChangeState(GameState.StartScreen);
     }
+
+    public void StartNewTurn()
+    {
+        foreach (var team in teams)
+        {
+            team.ResetMove();  // 重置所有小队的移动状态
+        }
+        selectedTeam = null;  // 重置选择的队伍
+        selectedTile = null;  // 重置选中的地块
+    }
+
+    public bool CanSelectTeam(TeamManager team)
+    {
+        // 确保一次只能选中一个队伍
+        return selectedTeam == null || team == selectedTeam;
+    }
+
+    public void SelectTeam(TeamManager team)
+    {
+        if (selectedTeam != null)
+        {
+            selectedTeam.Deselect();  // 取消当前选中
+        }
+        selectedTeam = team;
+        selectedTeam.Select();
+    }
+
+    public void DeselectTeam()
+    {
+        if (selectedTeam != null)
+        {
+            selectedTeam.Deselect();  // 调用小队的 Deselect 方法
+            selectedTeam = null;  // 取消选择
+        }
+    }
+
+    public void SelectTile(CustomTerrain tile)
+    {
+        if (selectedTile != null)
+        {
+            selectedTile.RemoveHighlight();  // 取消当前选中的地块高亮
+        }
+        selectedTile = tile;
+        selectedTile.Highlight();  // 高亮新选中的地块
+
+        // 更新 UI 显示地块信息
+        UIManager.Instance.ShowTileInfo(tile);
+    }
+
+    public void DeselectTile()
+    {
+        if (selectedTile != null)
+        {
+            selectedTile.RemoveHighlight();  // 取消高亮
+            selectedTile = null;
+        }
+    }
+
+
 
     public void SaveTeamState()
     {

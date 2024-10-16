@@ -1,0 +1,4 @@
+repository "migration@lxy_is_me@cloud.cn"
+  path "/"
+    br "/main"
+    co "/main"
