@@ -3,91 +3,115 @@ using UnityEngine;
 
 public class Pathfinder : MonoBehaviour
 {
-    public class Node
+    // FindPath 方法找到从 start 到 goal 的路径
+    public List<HexCell> FindPath(HexCell start, HexCell goal, HexGrid hexGrid, float speed)
     {
-        public CustomTerrain terrain;
-        public Node parent;
-        public float gCost; // 从起点到当前格子的移动代价
-        public float hCost; // 启发式代价（当前格子到目标格子的估计代价）
-        public float FCost => gCost + hCost; // 总代价
+        List<HexCell> openList = new List<HexCell>();
+        HashSet<HexCell> closedList = new HashSet<HexCell>();
+        Dictionary<HexCell, HexCell> cameFrom = new Dictionary<HexCell, HexCell>();
+        Dictionary<HexCell, int> gCost = new Dictionary<HexCell, int>();
+        Dictionary<HexCell, int> fCost = new Dictionary<HexCell, int>();
 
-        public Node(CustomTerrain terrain)
+        // 初始化路径
+        List<HexCell> path = new List<HexCell>();
+
+        openList.Add(start);
+        gCost[start] = 0;
+        fCost[start] = Heuristic(start, goal);
+
+        float remainingMoveSpeed = speed;
+
+        while (openList.Count > 0)
         {
-            this.terrain = terrain;
-        }
-    }
+            HexCell current = GetCellWithLowestFCost(openList, fCost);
 
-    public List<CustomTerrain> FindPath(CustomTerrain start, CustomTerrain target, float maxSpeed, out float totalCost)
-    {
-        List<Node> openSet = new List<Node>();
-        HashSet<CustomTerrain> closedSet = new HashSet<CustomTerrain>();
-        Node startNode = new Node(start);
-        Node targetNode = new Node(target);
-        openSet.Add(startNode);
-
-        while (openSet.Count > 0)
-        {
-            Node currentNode = openSet[0];
-            for (int i = 1; i < openSet.Count; i++)
+            // 如果剩余移动力不足或到达目标
+            if (remainingMoveSpeed <= 0 || current == goal)
             {
-                if (openSet[i].FCost < currentNode.FCost || (openSet[i].FCost == currentNode.FCost && openSet[i].hCost < currentNode.hCost))
-                {
-                    currentNode = openSet[i];
-                }
+                path = ReconstructPath(cameFrom, current); // 重建路径
+                break; // 停止搜索
             }
 
-            openSet.Remove(currentNode);
-            closedSet.Add(currentNode.terrain);
+            openList.Remove(current);
+            closedList.Add(current);
 
-            if (currentNode.terrain == targetNode.terrain)
+            foreach (HexCell neighbor in hexGrid.GetNeighbors(current))
             {
-                totalCost = currentNode.gCost;
-                return RetracePath(startNode, currentNode);
-            }
-
-            foreach (CustomTerrain neighbor in currentNode.terrain.neighbors)
-            {
-                if (closedSet.Contains(neighbor) || !neighbor.isPassable)
+                if (closedList.Contains(neighbor))
                 {
                     continue;
                 }
 
-                float newMovementCostToNeighbor = currentNode.gCost + neighbor.passCost;
-                Node neighborNode = new Node(neighbor)
-                {
-                    parent = currentNode,
-                    gCost = newMovementCostToNeighbor,
-                    hCost = GetDistance(neighbor, targetNode.terrain)
-                };
+                int tentativeGCost = gCost[current] + neighbor.GetPassCost();
 
-                if (!openSet.Exists(n => n.terrain == neighbor && n.FCost <= neighborNode.FCost))
+                // 如果剩余移动力不足以进入邻居单元格，跳过它
+                if (remainingMoveSpeed < neighbor.GetPassCost())
                 {
-                    openSet.Add(neighborNode);
+                    continue;
                 }
+
+                if (!openList.Contains(neighbor))
+                {
+                    openList.Add(neighbor);
+                }
+                else if (tentativeGCost >= gCost[neighbor])
+                {
+                    continue; // 如果路径更差，跳过
+                }
+
+                cameFrom[neighbor] = current;
+                gCost[neighbor] = tentativeGCost;
+                fCost[neighbor] = gCost[neighbor] + Heuristic(neighbor, goal);
             }
+
+            // 减少剩余移动力
+            remainingMoveSpeed -= current.GetPassCost();
         }
 
-        totalCost = float.MaxValue; // 表示无法到达
-        return null; // 没有找到路径
+        return path; // 返回路径
     }
 
-    private List<CustomTerrain> RetracePath(Node startNode, Node endNode)
+    // 计算启发式距离，用于A*算法
+    private int Heuristic(HexCell a, HexCell b)
     {
-        List<CustomTerrain> path = new List<CustomTerrain>();
-        Node currentNode = endNode;
+        return Mathf.Abs(a.coordinates.x - b.coordinates.x) + Mathf.Abs(a.coordinates.y - b.coordinates.y);
+    }
 
-        while (currentNode != startNode)
+    // 获取具有最低fCost的单元格
+    private HexCell GetCellWithLowestFCost(List<HexCell> openList, Dictionary<HexCell, int> fCost)
+    {
+        HexCell lowest = openList[0];
+        foreach (HexCell cell in openList)
         {
-            path.Add(currentNode.terrain);
-            currentNode = currentNode.parent;
+            if (fCost[cell] < fCost[lowest])
+            {
+                lowest = cell;
+            }
         }
+        return lowest;
+    }
 
-        path.Reverse();
+    // 重建路径，从目标单元格追溯到起点
+    private List<HexCell> ReconstructPath(Dictionary<HexCell, HexCell> cameFrom, HexCell current)
+    {
+        List<HexCell> path = new List<HexCell>();
+        while (cameFrom.ContainsKey(current))
+        {
+            path.Add(current);
+            current = cameFrom[current];
+        }
+        path.Reverse(); // 将路径反转为从起点到目标
         return path;
     }
 
-    private float GetDistance(CustomTerrain a, CustomTerrain b)
+    // 计算总回合数，给定路径和小队的速度
+    public int CalculateTurns(List<HexCell> path, int speed)
     {
-        return Vector3.Distance(a.transform.position, b.transform.position);
+        int totalCost = 0;
+        foreach (HexCell cell in path)
+        {
+            totalCost += cell.GetPassCost();
+        }
+        return Mathf.CeilToInt((float)totalCost / speed);
     }
 }

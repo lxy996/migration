@@ -19,7 +19,13 @@ public class GameManager : MonoBehaviour
     public Team team;
     public List<TeamManager> teams = new List<TeamManager>();  // 所有小队
     public TeamManager selectedTeam;  // 当前选中的小队
-    public CustomTerrain selectedTile;  // 当前选中的地块
+    public HexCell selectedCell;      // 当前选中的单元格
+    public HexGrid hexGrid;           // 引用当前的 HexGrid
+    public TeamMovement teamMovement;  // 引用动物小队的移动脚本
+    public Pathfinder pathfinder; // 引用路径查找算法
+
+    private HexCell startCell;         // 动物小队的起点单元格
+    private HexCell goalCell;          // 动物小队的目标单元格
 
     void Awake()
     {
@@ -33,120 +39,82 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
+    void Update()
     {
-        ChangeState(GameState.StartScreen);
+        HandleMouseInput();
     }
 
-    public void ChangeState(GameState newState)
+    void HandleMouseInput()
     {
-        currentState = newState;
-        switch (newState)
+        if (Input.GetMouseButtonDown(0))  // 检测鼠标左键点击
         {
-            case GameState.StartScreen:
-                LoadStartScreen();
-                break;
-            case GameState.InGame:
-                LoadInGameScene();
-                break;
-            case GameState.LevelEnd:
-                ShowLevelEndScreen();
-                break;
-            case GameState.Victory:
-                ShowVictoryScreen();
-                break;
-            case GameState.Restart:
-                RestartGame();
-                break;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                // 点击了队伍
+                TeamManager clickedTeam = hit.collider.GetComponent<TeamManager>();
+                if (clickedTeam != null)
+                {
+                    if (selectedTeam != clickedTeam)
+                    {
+                        SelectTeam(clickedTeam);  // 切换队伍
+                    }
+                }
+                else
+                {
+                    // 点击了单元格
+                    HexCell clickedCell = hit.collider.GetComponentInParent<HexCell>();
+                    if (clickedCell != null)
+                    {
+                        SelectCell(clickedCell);  // 选中单元格
+                    }
+                }
+            }
         }
-    }
-
-    void LoadStartScreen()
-    {
-        SceneManager.LoadScene("StartScreen");
-    }
-
-    void LoadInGameScene()
-    {
-        SceneManager.LoadScene("GameScene");
-        StartNewTurn();  // 开始游戏后重置小队状态
-    }
-
-    void ShowLevelEndScreen()
-    {
-        SaveTeamState();
-        SceneManager.LoadScene("LevelEndScreen");
-    }
-
-    void ShowVictoryScreen()
-    {
-        SceneManager.LoadScene("VictoryScreen");
-    }
-
-    void RestartGame()
-    {
-        ResetGameState();
-        ChangeState(GameState.StartScreen);
-    }
-
-    public void StartNewTurn()
-    {
-        foreach (var team in teams)
+        // 检测鼠标右键点击以取消选中
+        if (Input.GetMouseButtonDown(1))  // 右键取消选中
         {
-            team.ResetMove();  // 重置所有小队的移动状态
+            if (selectedTeam != null)
+            {
+                DeselectTeam();  // 调用取消选中的逻辑
+            }
+            else if (selectedCell != null)
+            {
+                selectedCell = null;  // 清除当前选中的单元格
+                Debug.Log("取消选中单元格");
+            }
         }
-        selectedTeam = null;  // 重置选择的队伍
-        selectedTile = null;  // 重置选中的地块
-    }
-
-    public bool CanSelectTeam(TeamManager team)
-    {
-        // 确保一次只能选中一个队伍
-        return selectedTeam == null || team == selectedTeam;
     }
 
     public void SelectTeam(TeamManager team)
     {
         if (selectedTeam != null)
         {
-            selectedTeam.Deselect();  // 取消当前选中
+            selectedTeam.Deselect();  // 如果之前有选中的小队，取消其选中状态
         }
+
         selectedTeam = team;
-        selectedTeam.Select();
+        selectedTeam.Select();  // 通知新的选中小队
     }
 
+    // 选中单元格并更新移动目标
+    public void SelectCell(HexCell cell)
+    {
+        selectedCell = cell;
+
+        if (selectedTeam != null && selectedTeam.isSelected)
+        {
+            selectedTeam.OnCellSelected(cell);
+        }
+    }
     public void DeselectTeam()
     {
         if (selectedTeam != null)
         {
-            selectedTeam.Deselect();  // 调用小队的 Deselect 方法
-            selectedTeam = null;  // 取消选择
+            selectedTeam.Deselect();
+            selectedTeam = null;
         }
     }
-
-    public void SelectTile(CustomTerrain tile)
-    {
-        if (selectedTile != null)
-        {
-            selectedTile.RemoveHighlight();  // 取消当前选中的地块高亮
-        }
-        selectedTile = tile;
-        selectedTile.Highlight();  // 高亮新选中的地块
-
-        // 更新 UI 显示地块信息
-        UIManager.Instance.ShowTileInfo(tile);
-    }
-
-    public void DeselectTile()
-    {
-        if (selectedTile != null)
-        {
-            selectedTile.RemoveHighlight();  // 取消高亮
-            selectedTile = null;
-        }
-    }
-
-
 
     public void SaveTeamState()
     {

@@ -98,6 +98,7 @@ MonoBehaviour:
   currentTile: {fileID: 0}
   pathfinder: {fileID: 0}
   maxMovementSpeed: 3
+  isSelected: 0
 --- !u!135 &1887094872802258114
 SphereCollider:
   m_ObjectHideFlags: 0

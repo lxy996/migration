@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 8372168442841596848}
   - component: {fileID: 8708268564992190945}
   - component: {fileID: -1186020618822128023}
-  m_Layer: 0
+  - component: {fileID: 2027746361622051524}
+  m_Layer: 10
   m_Name: "\u5E73\u539F"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,6 +152,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minHeight: 1
   maxHeight: 4
+--- !u!64 &2027746361622051524
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8547158413065489490}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: 008bf3cac50b1a14680ce9a91f33a9b0, type: 3}
 --- !u!1001 &1822035719259861771
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -162,6 +185,10 @@ PrefabInstance:
     - target: {fileID: 1521150239117492, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
       propertyPath: m_Name
       value: SM_Env_Grass_01 (12)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521150239117492, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4234986379825688, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
       propertyPath: m_RootOrder
@@ -229,6 +256,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1036054416871228358}
     m_Modifications:
+    - target: {fileID: 1462044914024364, guid: 491e0eccb7eb82f499f7dc7f6b1dfecf, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4054527318753274, guid: 491e0eccb7eb82f499f7dc7f6b1dfecf, type: 3}
       propertyPath: m_RootOrder
       value: 21
@@ -279,6 +310,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1036054416871228358}
     m_Modifications:
+    - target: {fileID: 1314301040504520, guid: 17cadfd66dccb874ca1bad5f08c32405, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4264553073233012, guid: 17cadfd66dccb874ca1bad5f08c32405, type: 3}
       propertyPath: m_RootOrder
       value: 44
@@ -349,6 +384,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Generic_River_Stone_01 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1462044914024364, guid: 491e0eccb7eb82f499f7dc7f6b1dfecf, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4054527318753274, guid: 491e0eccb7eb82f499f7dc7f6b1dfecf, type: 3}
       propertyPath: m_RootOrder
       value: 136
@@ -415,6 +454,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Grass_01 (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 1521150239117492, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4234986379825688, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
       propertyPath: m_RootOrder
       value: 12
@@ -480,6 +523,10 @@ PrefabInstance:
     - target: {fileID: 1935603645121562, guid: ed14f566be6563e4a9902b7a2adfe83c, type: 3}
       propertyPath: m_Name
       value: SM_Env_Generic_Tree_04 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1935603645121562, guid: ed14f566be6563e4a9902b7a2adfe83c, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4907178158916736, guid: ed14f566be6563e4a9902b7a2adfe83c, type: 3}
       propertyPath: m_RootOrder
@@ -551,6 +598,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Generic_Treestump_01 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1670227200470880, guid: 475b0e4fd881f70468083514520b6fdd, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4639418368294384, guid: 475b0e4fd881f70468083514520b6fdd, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -616,6 +667,10 @@ PrefabInstance:
     - target: {fileID: 1521150239117492, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
       propertyPath: m_Name
       value: SM_Env_Grass_01 (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521150239117492, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4234986379825688, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
       propertyPath: m_RootOrder
@@ -691,6 +746,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1036054416871228358}
     m_Modifications:
+    - target: {fileID: 1311470211110828, guid: 5885fb5b9d4415247879099e1d890ec2, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4385866732726834, guid: 5885fb5b9d4415247879099e1d890ec2, type: 3}
       propertyPath: m_RootOrder
       value: 22
@@ -745,6 +804,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1036054416871228358}
     m_Modifications:
+    - target: {fileID: 1888164936705912, guid: 31831991ea5df8544be2db96e031d5d3, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4128912063691504, guid: 31831991ea5df8544be2db96e031d5d3, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -803,6 +866,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM_Env_Generic_River_Stone_01 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1462044914024364, guid: 491e0eccb7eb82f499f7dc7f6b1dfecf, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 4054527318753274, guid: 491e0eccb7eb82f499f7dc7f6b1dfecf, type: 3}
       propertyPath: m_RootOrder
       value: 135
@@ -856,6 +923,10 @@ PrefabInstance:
     - target: {fileID: 1314301040504520, guid: 17cadfd66dccb874ca1bad5f08c32405, type: 3}
       propertyPath: m_Name
       value: SM_Env_Generic_Dead_Tree_01 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1314301040504520, guid: 17cadfd66dccb874ca1bad5f08c32405, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4264553073233012, guid: 17cadfd66dccb874ca1bad5f08c32405, type: 3}
       propertyPath: m_RootOrder
@@ -926,6 +997,10 @@ PrefabInstance:
     - target: {fileID: 1521150239117492, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
       propertyPath: m_Name
       value: SM_Env_Grass_01 (11)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1521150239117492, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4234986379825688, guid: 922382aacbe5e3547a83f0d53e5a850c, type: 3}
       propertyPath: m_RootOrder

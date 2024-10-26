@@ -34,6 +34,13 @@ public class UIManager : MonoBehaviour
             staminaText.text = "Stamina: " + team.stamina;
         }
     }
+
+    //隐藏队伍UI,暂时先占着位置,避免报错
+    public void HideTeamInfo()
+    {
+
+    }
+
     // 显示路径信息，包括消耗和预计回合数
     public void ShowPathInfo(float totalCost, float estimatedTurns)
     {

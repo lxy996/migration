@@ -7,9 +7,28 @@ public class HexCell : MonoBehaviour
     public Vector2Int coordinates;  // 存储单元格坐标
     public GameObject terrainPrefab;  // 手动拖入的地形预制体
     private GameObject instantiatedPrefab;  // 保存当前实例化的地形预制体
-
+    public CustomTerrain customTerrain;  // 引用 CustomTerrain 组件
+    private GameObject highlight;// 用于高亮的物体
+    private GameObject pathIndicator;// 用于显示路径的物体
+    private GameObject turnIndicator;// 用于显示回合数的物体
     // 用于存储不同类型的对象，如单位、建筑等
     private Dictionary<string, List<GameObject>> objectsInCell = new Dictionary<string, List<GameObject>>();
+
+    void Start()
+    {
+        // 获取当前 HexCell 下的 CustomTerrain 组件
+        customTerrain = GetComponentInChildren<CustomTerrain>();
+    }
+
+    // 获取该单元格的通行消耗
+    public int GetPassCost()
+    {
+        if (customTerrain != null)
+        {
+            return customTerrain.passCost;
+        }
+        return int.MaxValue;  // 如果没有 CustomTerrain，返回最大消耗，表示不可通行
+    }
 
     // 手动调用的方法，用于清除当前地形
     public void ClearTerrain()
@@ -54,6 +73,48 @@ public class HexCell : MonoBehaviour
         else
         {
             Debug.LogWarning("地形预制体缺少 TerrainHeightRange 组件");
+        }
+    }
+
+    // 设置高亮物体
+    public void SetHighlight(GameObject highlightObj)
+    {
+        highlight = highlightObj;
+    }
+
+    // 清除高亮
+    public void ClearHighlight()
+    {
+        if (highlight != null)
+        {
+            Destroy(highlight);
+        }
+    }
+
+    // 设置路径指示物体
+    public void SetPathIndicator(GameObject pathObj)
+    {
+        pathIndicator = pathObj;
+    }
+    public void SetTurnIndicator(GameObject turnObj)
+    {
+        turnIndicator = turnObj;
+    }
+
+    // 清除路径指示
+    public void ClearPathIndicator()
+    {
+        if (pathIndicator != null)
+        {
+            Destroy(pathIndicator);
+        }
+    }
+
+    public void ClearTurnIndicator()
+    {
+        if (turnIndicator != null)
+        {
+            Destroy(turnIndicator);
         }
     }
 

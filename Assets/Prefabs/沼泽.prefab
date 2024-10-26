@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5866286910010552056}
   - component: {fileID: 1751460719694273876}
   - component: {fileID: 3132834291973422985}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Reed_01 (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 5443382686937055608}
   - component: {fileID: 1067757648644553942}
   - component: {fileID: 324522104817008651}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Generic_River_Stone_01 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 2923870966131796493}
   - component: {fileID: 381073621513036455}
   - component: {fileID: 2756518962604033251}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Generic_River_Stone_02 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 8959886286283620969}
   - component: {fileID: 5567650272620668671}
   - component: {fileID: 6842475749304802765}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Generic_Treestump_01 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 4986662447211630246}
   - component: {fileID: 2108626257103197278}
   - component: {fileID: 5663974361210404007}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Generic_River_Stone_01 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -426,7 +426,7 @@ GameObject:
   - component: {fileID: 2560107654098021072}
   - component: {fileID: 5974652817301345139}
   - component: {fileID: 1635971386052827298}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Tile_Hex_Colunm_01 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -509,7 +509,7 @@ GameObject:
   - component: {fileID: 1978175830040329438}
   - component: {fileID: 6879369681655759552}
   - component: {fileID: 7889131195529766331}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Lilly_02 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -592,7 +592,7 @@ GameObject:
   - component: {fileID: 8472044610574600835}
   - component: {fileID: 3120549276611781422}
   - component: {fileID: 4612705641517587974}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Reed_01 (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -675,7 +675,7 @@ GameObject:
   - component: {fileID: 3205178882951174677}
   - component: {fileID: 8063837680487619293}
   - component: {fileID: 286440052564128301}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Reed_01 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -758,7 +758,7 @@ GameObject:
   - component: {fileID: 875395448768805410}
   - component: {fileID: 3995175093443951839}
   - component: {fileID: 4039968506338242169}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Lilly_02 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -841,7 +841,7 @@ GameObject:
   - component: {fileID: 2229242927705103930}
   - component: {fileID: 3519386127741253793}
   - component: {fileID: 260833545958879037}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Generic_Dead_Tree_01 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -924,7 +924,7 @@ GameObject:
   - component: {fileID: 9061737335170163844}
   - component: {fileID: 235638632602939325}
   - component: {fileID: 867773415517660179}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Generic_Dead_Tree_01 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1007,7 +1007,7 @@ GameObject:
   - component: {fileID: 6973453705237021716}
   - component: {fileID: 3026213240056790954}
   - component: {fileID: 5855153554238581114}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Reed_01 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1090,7 +1090,7 @@ GameObject:
   - component: {fileID: 2344001317963891624}
   - component: {fileID: 1282576030567251885}
   - component: {fileID: 2880476025189536442}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Generic_Treestump_01 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1173,7 +1173,7 @@ GameObject:
   - component: {fileID: 3349063102961794885}
   - component: {fileID: 8651108152658529306}
   - component: {fileID: 8983999843532505349}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Generic_Dead_Tree_01 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1256,7 +1256,7 @@ GameObject:
   - component: {fileID: 5019177126621609245}
   - component: {fileID: 7829984699573545659}
   - component: {fileID: 2203565180249003777}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Reed_01 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1339,7 +1339,7 @@ GameObject:
   - component: {fileID: 2696971057301445136}
   - component: {fileID: 2795976882128484675}
   - component: {fileID: 5970533165199027926}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Reed_01 (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1424,7 +1424,8 @@ GameObject:
   - component: {fileID: 8949139594769343646}
   - component: {fileID: 1422363280923459328}
   - component: {fileID: 4472994095503438814}
-  m_Layer: 0
+  - component: {fileID: 9166012977893478244}
+  m_Layer: 10
   m_Name: "\u6CBC\u6CFD"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1547,6 +1548,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minHeight: 0
   maxHeight: 3
+--- !u!64 &9166012977893478244
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7059560213577305471}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 3361828177718838057, guid: 6ead94ff2aaa31849a5de8b6aa0e6953, type: 3}
 --- !u!1 &7334437388154376359
 GameObject:
   m_ObjectHideFlags: 0
@@ -1558,7 +1581,7 @@ GameObject:
   - component: {fileID: 2514102126565718779}
   - component: {fileID: 8924631729158898353}
   - component: {fileID: 7131675088549524787}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Reed_01 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1641,7 +1664,7 @@ GameObject:
   - component: {fileID: 7720655578927446320}
   - component: {fileID: 7421351022602503492}
   - component: {fileID: 2227784392854095566}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Reed_01 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1724,7 +1747,7 @@ GameObject:
   - component: {fileID: 6380250131058897947}
   - component: {fileID: 8874651392337816479}
   - component: {fileID: 6930778881271674329}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SM_Env_Generic_Dead_Tree_01 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

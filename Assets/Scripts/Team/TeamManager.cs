@@ -6,17 +6,26 @@ public class TeamManager : MonoBehaviour
 {
     public Team team;
     public CustomTerrain currentTile;
+    public HexGrid hexGrid;
+    public TeamMovement teamMovement;  // 引用动物小队的移动脚本
     public Pathfinder pathfinder; // 路径寻路器
-    public float maxMovementSpeed = 3f; // 小队最大移动力
+    public GameObject teamModel;  // 小队的模型
+
+    public int speed;  // 单位移动力
     public bool isSelected = false; // 小队是否被选中
     private bool hasMoved = false; // 当前回合是否已经移动
+
+    private HexCell startCell = null;   // 起始点
+    private HexCell targetCell = null;  // 目标点
+
     private List<CustomTerrain> currentPath = new List<CustomTerrain>(); // 当前路径
-    private CustomTerrain selectedTile = null; // 记录当前选中的地块
 
     void Start()
     {
         // 初始化小队
         team = new Team("Zebra", 5);
+        speed = team.speed;
+
         // 获取小队初始所在的地块
         currentTile = GetTileAtPosition(transform.position);
 
@@ -24,180 +33,92 @@ public class TeamManager : MonoBehaviour
         {
             Debug.Log("小队初始位置: " + currentTile.name);
         }
-    }
 
-    void Update()
-    {
-        HandleMouseInput();
-    }
+        teamMovement = FindObjectOfType<TeamMovement>();  // 找到场景中的 TeamMovement 脚本
 
-    void HandleMouseInput()
-    {
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                CustomTerrain clickedTile = hit.collider.GetComponent<CustomTerrain>();
-                TeamManager clickedTeam = hit.collider.GetComponent<TeamManager>();
-
-                if (Input.GetMouseButtonDown(0)) // 左键点击
-                {
-                    if (clickedTeam != null && clickedTeam == this)
-                    {
-                        Select();
-                    }
-                    else if (isSelected && clickedTile != null)
-                    {
-                        if (selectedTile == null)
-                        {
-                            selectedTile = clickedTile;
-                            //ShowPathTo(clickedTile);
-                        }
-                        else if (selectedTile == clickedTile)
-                        {
-                            StartCoroutine(MoveAlongPath(currentPath));
-                            selectedTile = null;
-                        }
-                    }
-                    else if (clickedTile != null)
-                    {
-                        ShowTileInfo(clickedTile);
-                    }
-                }
-                else if (Input.GetMouseButtonDown(1)) // 右键点击
-                {
-                    Deselect();
-                }
-            }
-        }
     }
 
     // 选中小队
     public void Select()
     {
         isSelected = true;
-        GameManager.Instance.SelectTeam(this);  // 通知 GameManager 更新 UI
-        Debug.Log("小队已选中");
-        // 显示小队的 UI 信息
         UIManager.Instance.ShowTeamInfo(team);
+        
+        // 单位被选中后，计算可移动范围
+        currentTile = GetTileAtPosition(transform.position);
+        startCell = currentTile.GetComponentInParent<HexCell>();
+        List<HexCell> movableCells = hexGrid.GetMovableCells(startCell, speed);
+        hexGrid.HighlightMovableCells(movableCells);
+        
+        Debug.Log("队伍已选中");
     }
 
     // 取消小队选中
     public void Deselect()
     {
-        if (isSelected)  // 只有在选中状态下才执行取消选中操作
-        {
-            isSelected = false;
-            selectedTile = null;
-            ClearPreviousHighlights();
-            Debug.Log("小队已取消选中");
-
-            // 可能还需要通知 GameManager，更新其他 UI 或状态
-            GameManager.Instance.DeselectTeam();  // 确保不会再递归调用 Deselect()
-        }
+        isSelected = false;
+        targetCell = null;
+        UIManager.Instance.HideTeamInfo();
+        // 当单位取消选中时，清除高亮
+        hexGrid.ClearHighlights();
+        Debug.Log("队伍已取消选中");
     }
 
-    // 显示路径并计算消耗
-    /*public void ShowPathTo(CustomTerrain targetTile)
+    // 当选中一个单元格时
+    public void OnCellSelected(HexCell cell)
     {
-        float totalCost;
-        ClearPreviousHighlights();
-
-        // 调用A*算法，获取路径的坐标列表
-        List<CubeCoordinate> pathCoordinates = pathfinder.AStarCubeNavigaction(currentTile.cubeCoordinate, targetTile.cubeCoordinate, out totalCost);
-
-        // 将坐标列表转换为 CustomTerrain 列表
-        currentPath = new List<CustomTerrain>();
-        foreach (var coordinate in pathCoordinates)
+        if (targetCell == null)
         {
-            CustomTerrain tile = HexGrid.Instance.GetTileFromCoordinate(coordinate);
-            if (tile != null)
-            {
-                currentPath.Add(tile);
-            }
+            // 选中目标单元格
+            targetCell = cell;
+            Debug.Log("设定目标单元格: " + cell.coordinates);
         }
-
-        // 检查路径是否有效以及移动力是否足够
-        if (currentPath != null && totalCost <= maxMovementSpeed)
+        else if (targetCell == cell)
         {
-            HighlightPath(currentPath);
-            Debug.Log("路径找到，总消耗: " + totalCost);
-            Debug.Log("预计移动回合数: " + Mathf.Ceil(totalCost / team.speed) + " 回合");
-
-            // 显示路径信息
-            UIManager.Instance.ShowPathInfo(totalCost, Mathf.Ceil(totalCost / team.speed));
+            // 如果再次点击相同单元格，执行移动
+            ExecuteMove();
         }
         else
         {
-            Debug.Log("目标不可达或超出移动力范围");
-        }
-    }*/
-
-
-    void HighlightPath(List<CustomTerrain> path)
-    {
-        foreach (var tile in path)
-        {
-            tile.Highlight();
+            // 重新设定目标
+            targetCell = cell;
+            Debug.Log("更改目标单元格: " + cell.coordinates);
         }
     }
 
-    void ClearPreviousHighlights()
+    public void OnRightClick(HexCell targetCell)
     {
-        // 如果路径已经高亮，取消所有高亮
-        if (currentPath != null)
-        {
-            foreach (var tile in currentPath)
-            {
-                if (tile != null)
-                {
-                    tile.RemoveHighlight();
-                }
-            }
-            currentPath.Clear();
-        }
+        currentTile = GetTileAtPosition(transform.position);
+        startCell = currentTile.GetComponentInParent<HexCell>();
+        List<HexCell> path = pathfinder.FindPath(startCell, targetCell, hexGrid, speed);
+
+        int turns = pathfinder.CalculateTurns(path, speed);
+
+        // 调用 HexGrid 显示路径，并在路径终点显示回合数
+        hexGrid.ShowPath(path, turns);
     }
 
-    IEnumerator MoveAlongPath(List<CustomTerrain> path)
+    // 执行移动操作
+    void ExecuteMove()
     {
-        if (path == null || path.Count == 0)
+        currentTile = GetTileAtPosition(transform.position);
+        startCell = currentTile.GetComponentInParent<HexCell>();
+
+        if (currentTile != null && targetCell != null)
         {
-            Debug.LogWarning("路径为空，无法移动");
-            yield break;
+            teamMovement.StartMove(teamModel, startCell, targetCell, GameManager.Instance.hexGrid, GameManager.Instance.pathfinder, speed);
+            Debug.Log("移动开始");
         }
-
-        hasMoved = true;
-        foreach (var tile in path)
-        {
-            Vector3 startPosition = transform.position;
-            Vector3 endPosition = tile.transform.position;
-            float elapsedTime = 0f;
-            float moveTime = 1f;
-
-            while (elapsedTime < moveTime)
-            {
-                transform.position = Vector3.Lerp(startPosition, endPosition, elapsedTime / moveTime);
-                elapsedTime += Time.deltaTime;
-                yield return null;
-            }
-
-            transform.position = endPosition;
-            currentTile = tile;
-        }
-
-        // 更新资源和事件
-        CollectResources();
-        ResolveEvents();
-
-        // 重置移动状态
-        hasMoved = false;
     }
 
     CustomTerrain GetTileAtPosition(Vector3 position)
     {
+        // 定义一个只检测地形的 LayerMask
+        LayerMask terrainLayerMask = LayerMask.GetMask("TerrainLayer"); 
+
         Ray ray = new Ray(position + Vector3.down * 10f, Vector3.up);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        // 使用 LayerMask 忽略其他层的 Collider
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, terrainLayerMask))
         {
             Debug.Log(hit.collider.gameObject.name);
             return hit.collider.GetComponent<CustomTerrain>();
