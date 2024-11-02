@@ -38,10 +38,10 @@ public class HexGrid : MonoBehaviour
 
     public void CreateHexagonGrid()
     {
-        ClearGrid();  // 清除现有网格
-        CalculateHexSize();  // 计算六边形尺寸
+        ClearGrid();  // Clear existing grid
+        CalculateHexSize();  // Calculate hexagon dimensions
 
-        // 生成六边形网格
+        // Generate hexagonal grid
         for (int q = -radius; q <= radius; q++)
         {
             int r1 = Mathf.Max(-radius, -q - radius);
@@ -51,6 +51,32 @@ public class HexGrid : MonoBehaviour
                 CreateHexCell(q, r);
             }
         }
+    }
+    void CreateHexCell(int q, int r)
+    {
+        // Calculate the position of each hexagon
+        Vector3 position = CalculateHexPosition(q, r);
+
+        // Instantiate HexCell logical object
+        GameObject hexCellObject = new GameObject("HexCell");
+        // Create a new HexCell object
+        HexCell cell = hexCellObject.AddComponent<HexCell>();  
+        cell.transform.position = position;
+        cell.transform.parent = transform;
+        cell.coordinates = new Vector2Int(q, r);
+        cells.Add(cell);
+
+        // Set terrain prefab (initial terrain)
+        cell.SetTerrain(terrainPrefab);
+    }
+    public Vector3 CalculateHexPosition(int q, int r)
+    {
+        // Horizontal direction: 3/4 of the hexagon height
+        float x = hexWidth * (3f / 4f * q);
+        // Vertical direction: Adjust to sqrt(3)/2 of height to ensure offset
+        float z = hexWidth * Mathf.Sqrt(3) / 2 * (r + q / 2f);  
+
+        return new Vector3(x, 0, z);
     }
 
     public void ClearGrid()
@@ -62,23 +88,6 @@ public class HexGrid : MonoBehaviour
         }
 
         cells.Clear();  // 清空HexCell列表
-    }
-
-    void CreateHexCell(int q, int r)
-    {
-        // 计算每个六边形的位置
-        Vector3 position = CalculateHexPosition(q, r);
-
-        // 实例化 HexCell 逻辑对象
-        GameObject hexCellObject = new GameObject("HexCell");
-        HexCell cell = hexCellObject.AddComponent<HexCell>();  // 新建 HexCell 对象
-        cell.transform.position = position;
-        cell.transform.parent = transform;
-        cell.coordinates = new Vector2Int(q, r);
-        cells.Add(cell);
-
-        // 设置地形预制体（初始地形）
-        cell.SetTerrain(terrainPrefab);  // 这里你可以传入不同的地形预制体
     }
 
     // 为所有存在的 HexCell 重新设置地形
@@ -94,13 +103,6 @@ public class HexGrid : MonoBehaviour
                 cell.SetTerrain(cell.terrainPrefab);  // 让每个 HexCell 使用自己的 terrainPrefab 设置地形
             }
         }
-    }
-    public Vector3 CalculateHexPosition(int q, int r)
-    {
-        float x = hexWidth * (3f / 4f * q); // 水平方向：六边形高度的 3/4 倍
-        float z = hexWidth * Mathf.Sqrt(3) / 2 * (r + q / 2f);  // 垂直方向：调整为高度的 sqrt(3)/2 倍确保错位
-
-        return new Vector3(x, 0, z);
     }
 
     // 获取指定 HexCell 的邻居

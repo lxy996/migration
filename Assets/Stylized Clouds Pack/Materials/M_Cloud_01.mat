@@ -97,7 +97,7 @@ Material:
     - Vector1_2A06FCBD: 0.5
     - Vector1_A8FABF8F: 0.1
     - Vector1_D652EA7E: 0.1
-    - _AO_Strength: 1
+    - _AO_Strength: 0.7
     - _AlphaClip: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -106,7 +106,7 @@ Material:
     - _Cull: 2
     - _Cutoff: 0.5
     - _DstBlend: 0
-    - _EdgeBrightness: 0.8
+    - _EdgeBrightness: 0.21
     - _EnvironmentReflections: 1
     - _FuzzyPower: 4
     - _GlossMapScale: 0
@@ -130,8 +130,8 @@ Material:
     m_Colors:
     - Vector3_DF4CF5A5: {r: 1, g: 5, b: 1, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1.0176226, g: 1.0176226, b: 1.0176226, a: 1}
+    - _Color: {r: 1.2167858, g: 1.2167858, b: 1.2167858, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _SecColor: {r: 0.5172437, g: 0.83622026, b: 0.8915094, a: 1}
+    - _SecColor: {r: 0.7073247, g: 0.78612643, b: 0.8018868, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []

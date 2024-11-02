@@ -30,49 +30,46 @@ public class HexCell : MonoBehaviour
         return int.MaxValue;  // 如果没有 CustomTerrain，返回最大消耗，表示不可通行
     }
 
-    // 手动调用的方法，用于清除当前地形
+    // Manually called method to clear the current terrain
     public void ClearTerrain()
     {
-        // 如果已经有实例化的地形预制体，销毁它
+        // If a terrain prefab instance already exists, destroy it
         if (instantiatedPrefab != null)
         {
-            DestroyImmediate(instantiatedPrefab);  // 在编辑器模式下立即销毁
+            DestroyImmediate(instantiatedPrefab);  // Immediately destroy in editor mode
         }
     }
-
-    // 手动调用的方法，用于设置地形
+    // Manually called method to set the terrain
     public void SetTerrain(GameObject newTerrainPrefab)
     {
-        // 先清除之前的地形
+        // First, clear the previous terrain
         ClearTerrain();
-
-        // 赋值新的地形预制体
+        // Assign the new terrain prefab
         terrainPrefab = newTerrainPrefab;
-
-        // 获取 TerrainHeightRange 组件中的高度范围
+        // Get the height range from the TerrainHeightRange component
         TerrainHeightRange heightRange = terrainPrefab.GetComponent<TerrainHeightRange>();
         if (heightRange != null)
         {
-            // 在指定的范围内随机生成高度
+            // Randomly generate height within the specified range
             float randomHeight = Random.Range(heightRange.minHeight, heightRange.maxHeight);
             Vector3 terrainPosition = new Vector3(transform.position.x, randomHeight, transform.position.z);
 
-            // 随机选择 Y 轴的旋转角度（60、120、180、240、300、360度）
+            // Randomly select a rotation angle on the Y-axis (60, 120, 180, 240, 300, 360 degrees)
             int[] possibleRotations = { 60, 120, 180, 240, 300, 360 };
             int randomRotation = possibleRotations[Random.Range(0, possibleRotations.Length)];
-            Quaternion randomYRotation = Quaternion.Euler(0, randomRotation, 0);  // 只围绕 Y 轴旋转
+            Quaternion randomYRotation = Quaternion.Euler(0, randomRotation, 0);  // Rotate only around the Y-axis
 
-            // 实例化新的地形预制体并存储
+            // Instantiate and store the new terrain prefab
             if (terrainPrefab != null)
             {
-                instantiatedPrefab = Instantiate(terrainPrefab, terrainPosition, randomYRotation, transform);  // 使用随机旋转和高度
-                instantiatedPrefab.name = terrainPrefab.name;  // 去掉 (Clone) 后缀
-                instantiatedPrefab.transform.localPosition = new Vector3(0, randomHeight, 0);  // 确保位置正确
+                instantiatedPrefab = Instantiate(terrainPrefab, terrainPosition, randomYRotation, transform);  // Apply random rotation and height
+                instantiatedPrefab.name = terrainPrefab.name;  // Remove the (Clone) suffix
+                instantiatedPrefab.transform.localPosition = new Vector3(0, randomHeight, 0);  // Ensure the position is correct
             }
         }
         else
         {
-            Debug.LogWarning("地形预制体缺少 TerrainHeightRange 组件");
+            Debug.LogWarning("The terrain prefab lacks the TerrainHeightRange component");
         }
     }
 

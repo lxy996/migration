@@ -367,7 +367,8 @@ MonoBehaviour:
   hexGrid: {fileID: 0}
   teamMovement: {fileID: 0}
   pathfinder: {fileID: 0}
-  maxMovementSpeed: 3
+  teamModel: {fileID: 1571992533316207964}
+  speed: 0
   isSelected: 0
 --- !u!136 &-4151240330259087989
 CapsuleCollider:
